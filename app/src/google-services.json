@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "740626445173",
+    "project_id": "workingtimer2-ac1fb",
+    "storage_bucket": "workingtimer2-ac1fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740626445173:android:0afeb41588fd258835993c",
+        "android_client_info": {
+          "package_name": "com.example.workingtimerv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740626445173-476d9bp8lu0ejg6r8r0pu5rsj4h8q5qv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBwXLw301tVINW4c9qOcG08FvgcLxxSK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740626445173-476d9bp8lu0ejg6r8r0pu5rsj4h8q5qv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
