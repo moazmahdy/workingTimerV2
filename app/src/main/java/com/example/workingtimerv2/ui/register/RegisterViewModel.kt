@@ -1,8 +1,8 @@
 package com.example.workingtimerv2.ui.register
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import com.example.workingtimerv2.DataUtils
+import com.example.workingtimerv2.Navigator
 import com.example.workingtimerv2.base.BaseViewModel
 import com.example.workingtimerv2.database.addUserToFirestore
 import com.example.workingtimerv2.model.AppUser
@@ -10,16 +10,20 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class RegisterViewModel: BaseViewModel<Navigator>() {
+
     // Variables to hold the input values for name, email, and password
     val name = ObservableField<String>()
     val email = ObservableField<String>()
     val password = ObservableField<String>()
+
     // Variables to hold the error messages for name, email, and password
     val nameError = ObservableField<String>()
     val emailError = ObservableField<String>()
     val passwordError = ObservableField<String>()
+
     // Firebase authentication instance
     private val auth = Firebase.auth
+    val user = auth.currentUser
 
     // Method to create a new account
     fun createAccount() {
@@ -42,15 +46,15 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                 if (!task.isSuccessful) {
                     // Show error message
                     messageLiveData.value = task.exception!!.localizedMessage
-                } else {
-                    // Show success message
-                    messageLiveData.value = "Successful registration"
-                    // Send email verification
+                }
+                else{
                     sendEmailVerification()
+                    // Create the user with email and password
+                    createFirestoreUser(task.result.user!!.uid)
                 }
             }
     }
-
+    // Method to verify the email
     private fun sendEmailVerification() {
         val user = auth.currentUser
         user?.sendEmailVerification()
@@ -65,22 +69,25 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
 
     // Method to create the user in Firestore
     private fun createFirestoreUser(uid: String?) {
-        // Create the user object
-        val user = AppUser(name = name.get(), email = email.get())
-        // Add the user to Firestore
-        addUserToFirestore(user, {
-            // Hide loading spinner
-            showLoading.value = false
-            // Save the user object to a DataUtils class
-            DataUtils.user = user
-            // Navigate to the home screen
-            navigator?.openHomeScreen()
-        }, {
-            // Hide loading spinner
-            showLoading.value = false
-            // Show error message
-            messageLiveData.value = it.localizedMessage
-        })
+        if (user != null && user.isEmailVerified) {
+            // Create the user object
+            val user = AppUser(name = name.get(), email = email.get())
+            // Add the user to Firestore
+            addUserToFirestore(user, {
+                showLoading.value = false
+                // Save the user object to a DataUtils class
+                DataUtils.user = user
+                // Navigate to the home screen
+                navigator?.openLoginScreen()
+            }, {
+                // Hide loading spinner
+                showLoading.value = false
+                // Show error message
+                messageLiveData.value = it.localizedMessage
+            })
+        } else {
+            messageLiveData.value = "Please verify your email before proceeding"
+        }
     }
 
     // Method to validate the input fields

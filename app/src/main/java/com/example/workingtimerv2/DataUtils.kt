@@ -8,3 +8,4 @@ object DataUtils {
     var user: AppUser? = null
     var firebaseUser: User? = null
 }
+
