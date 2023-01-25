@@ -10,62 +10,89 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class RegisterViewModel: BaseViewModel<Navigator>() {
-
+    // Variables to hold the input values for name, email, and password
     val name = ObservableField<String>()
-    val nameError = ObservableField<String>()
     val email = ObservableField<String>()
-    val emailError = ObservableField<String>()
     val password = ObservableField<String>()
+    // Variables to hold the error messages for name, email, and password
+    val nameError = ObservableField<String>()
+    val emailError = ObservableField<String>()
     val passwordError = ObservableField<String>()
+    // Firebase authentication instance
     private val auth = Firebase.auth
 
-    fun createAccount(){
-        Log.e("click" , "createAccount")
-        if (validate()){
+    // Method to create a new account
+    fun createAccount() {
+        // Validate the input fields
+        if (validate()) {
+            // Add the account to Firebase
             addAccountToFirebase()
         }
     }
 
+    // Method to add the account to Firebase
     private fun addAccountToFirebase() {
+        // Show loading spinner
         showLoading.value = true
+        // Create the user with email and password
         auth.createUserWithEmailAndPassword(email.get()!!, password.get()!!)
-            .addOnCompleteListener { task->
+            .addOnCompleteListener { task ->
+                // Hide loading spinner
                 showLoading.value = false
                 if (!task.isSuccessful) {
-                    //show error message
+                    // Show error message
                     messageLiveData.value = task.exception!!.localizedMessage
                 } else {
-                    //show success message
-                    messageLiveData.value = "success registration"
-                    //navigator?.openHomeScreen()
-                    createFirestoreUser(task.result.user?.uid)
+                    // Show success message
+                    messageLiveData.value = "Successful registration"
+                    // Send email verification
+                    sendEmailVerification()
                 }
             }
     }
 
+    private fun sendEmailVerification() {
+        val user = auth.currentUser
+        user?.sendEmailVerification()
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    messageLiveData.value = "Verification email sent to ${user.email}"
+                } else {
+                    messageLiveData.value = "Failed to send verification email"
+                }
+            }
+    }
+
+    // Method to create the user in Firestore
     private fun createFirestoreUser(uid: String?) {
-        showLoading.value = false
-        val user = AppUser(name = name.get(),
-            email = email.get())
+        // Create the user object
+        val user = AppUser(name = name.get(), email = email.get())
+        // Add the user to Firestore
         addUserToFirestore(user, {
+            // Hide loading spinner
             showLoading.value = false
+            // Save the user object to a DataUtils class
             DataUtils.user = user
+            // Navigate to the home screen
             navigator?.openHomeScreen()
         }, {
+            // Hide loading spinner
             showLoading.value = false
+            // Show error message
             messageLiveData.value = it.localizedMessage
         })
     }
 
+    // Method to validate the input fields
     private fun validate(): Boolean {
         var valid = true
-        if (name.get().isNullOrBlank()){
+        if (name.get().isNullOrBlank()) {
             nameError.set("Enter name")
             valid = false
         } else {
             nameError.set(null)
         }
-        if (email.get().isNullOrBlank()){
+        if (email.get().isNullOrBlank()) {
             emailError.set("Enter email")
             valid = false
         } else {

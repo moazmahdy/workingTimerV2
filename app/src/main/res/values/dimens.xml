@@ -1,0 +1,14 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="half_margin">8dp</dimen>
+    <dimen name="full_margin">16dp</dimen>
+    <dimen name="double_margin">32dp</dimen>
+    <dimen name="max_margin">80dp</dimen>
+
+    <dimen name="edit_text_drawable_padding">8dp</dimen>
+
+    <dimen name="progress_bar_height">8dp</dimen>
+</resources>
