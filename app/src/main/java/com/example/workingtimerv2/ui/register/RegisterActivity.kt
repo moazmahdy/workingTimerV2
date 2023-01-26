@@ -35,8 +35,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
         startActivity(intent)
     }
 
-    override fun openHomeScreen() {
-        TODO("Not yet implemented")
-    }
+    override fun openHomeScreen(){}
 
 }

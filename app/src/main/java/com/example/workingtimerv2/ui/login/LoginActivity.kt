@@ -8,6 +8,7 @@ import com.example.workingtimerv2.Navigator
 import com.example.workingtimerv2.R
 import com.example.workingtimerv2.base.BaseActivity
 import com.example.workingtimerv2.databinding.ActivityLoginBinding
+import com.example.workingtimerv2.ui.home.HomeActivity
 import com.example.workingtimerv2.ui.register.RegisterActivity
 
 class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Navigator{
@@ -19,16 +20,15 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Nav
             ClickEvent ->
             startActivity(Intent(this, RegisterActivity::class.java))
         }
+        viewDataBinding.vm = viewModel
         viewModel.navigator = this
 
     }
 
-    override fun openLoginScreen() {
-        TODO("Not yet implemented")
-    }
+    override fun openLoginScreen(){}
 
     override fun openHomeScreen() {
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
 

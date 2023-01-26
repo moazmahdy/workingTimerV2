@@ -10,5 +10,6 @@
     <string name="username">User Name</string>
     <string name="already_haveAcc">Already have an account?</string>
     <string name="register_header">Register</string>
+    <string name="hello_message">Hello Omar \nHow are you today</string>
 
 </resources>

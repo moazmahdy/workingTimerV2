@@ -31,18 +31,23 @@ class LoginViewModel : BaseViewModel<Navigator>() {
     fun authWithFirebaseAuth(){
         showLoading.value = true
         firebaseAuth.signInWithEmailAndPassword(email.get()!!, password.get()!!)
-            .addOnCompleteListener{
-                    task->
+            .addOnCompleteListener{ task ->
                 showLoading.value = false
                 if(!task.isSuccessful){
                     messageLiveData.value = task.exception?.localizedMessage
                 }
                 else {
-                    checkUserInFireStore(task.result.user!!.uid)
-                    navigator?.openHomeScreen()
+                    val user = task.result.user
+                    if(user != null && user.isEmailVerified){
+                        checkUserInFireStore(user.uid)
+                        navigator?.openHomeScreen()
+                    } else {
+                        messageLiveData.value = "Email is not verified, please verify your email before logging in."
+                    }
                 }
             }
     }
+
 
     // Method to check if the user exists
     fun checkUserInFireStore(uid: String?) {
