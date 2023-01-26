@@ -1,24 +1,24 @@
 package com.example.workingtimerv2.ui.home
 
-import android.content.Context
-import kotlinx.coroutines.*
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.example.workingtimerv2.R
+import com.example.workingtimerv2.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
-    private var startTime: Long = 0
-    private var endTime: Long = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        val binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
+        val viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        // Start the timer when the activity is created
-        startTime = System.currentTimeMillis()
+        binding.vm = viewModel
+        // I call the startTimer function from viewModel to start the timer when Activity is created
+        // When activity is created means the user is successfully signed in
+        viewModel.startTimer()
 
-        // Set an onClickListener for a button that will end the timer and save the time
     }
-
 }
