@@ -1,16 +1,16 @@
-package com.example.workingtimerv2.ui.home
+package com.example.workingtimerv2.ui.employee
 
 
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
-import com.example.workingtimerv2.Navigator
 import com.example.workingtimerv2.base.BaseViewModel
-import com.example.workingtimerv2.model.AppUser
+import com.google.firebase.auth.FirebaseAuth
 
 import kotlinx.coroutines.*
 import java.util.*
 
-class HomeViewModel : BaseViewModel<Navigator>() {
+class EmployeeViewModel : BaseViewModel<Navigator>() {
 
     var headerText = ObservableField<String>()
     var timer      = ObservableField<String>()
@@ -68,8 +68,12 @@ class HomeViewModel : BaseViewModel<Navigator>() {
                 calendar.get(Calendar.YEAR))
     }
 
-
     fun setUserName(name: String){
-        headerText.set("Hello $name How are you today")
+        headerText.set("Hello $name \n" +
+                "How are you today")
+    }
+    fun logout(){
+        FirebaseAuth.getInstance().signOut();
+        navigator?.openLoginScreen()
     }
 }

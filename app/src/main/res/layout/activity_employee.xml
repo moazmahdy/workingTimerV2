@@ -7,14 +7,27 @@
 
         <variable
             name="vm"
-            type="com.example.workingtimerv2.ui.home.HomeViewModel" />
+            type="com.example.workingtimerv2.ui.employee.EmployeeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/backgroundi"
-        tools:context=".ui.home.HomeActivity">
+        tools:context=".ui.employee.EmployeeActivity">
+
+
+        <ImageView
+            android:id="@+id/logout_ic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/header_text"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/logout_ic"
+            android:layout_margin="30dp"
+            android:onClick="@{()->vm.logout()}"
+            />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/header_text"
@@ -26,6 +39,7 @@
             android:textColor="@color/purple_700"
             android:textSize="36sp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/logout_ic"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/hello_message" />
 
@@ -45,8 +59,8 @@
             android:id="@+id/timer_bg"
             android:layout_width="match_parent"
             android:layout_height="90dp"
-            android:layout_marginTop="@dimen/half_margin"
-            android:background="@color/purple_200"
+            android:layout_margin="12dp"
+            android:background="@drawable/rectangle_background"
             app:layout_constraintTop_toBottomOf="@id/today_DateTxv" />
 
         <com.google.android.material.textview.MaterialTextView

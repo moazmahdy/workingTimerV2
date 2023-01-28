@@ -2,7 +2,6 @@ package com.example.workingtimerv2.ui.register
 
 import androidx.databinding.ObservableField
 import com.example.workingtimerv2.DataUtils
-import com.example.workingtimerv2.Navigator
 import com.example.workingtimerv2.base.BaseViewModel
 import com.example.workingtimerv2.database.addUserToFirestore
 import com.example.workingtimerv2.model.AppUser
@@ -53,7 +52,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                     //sendEmailVerification()
                     // Create the user with email and password
                     createFirestoreUser(task.result.user!!.uid)
-                    navigator?.openHomeScreen(name.get().toString())
+                    navigator?.openEmployeeScreen(name.get().toString())
 //                    AppName.userName = name.toString()
                 }
             }
@@ -83,7 +82,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                 // Save the user object to a DataUtils class
                 DataUtils.user = user
                 // Navigate to the home screen
-                navigator?.openHomeScreen(user.name!!)
+                navigator?.openEmployeeScreen(user.name!!)
             }, {
                 // Hide loading spinner
                 showLoading.value = false

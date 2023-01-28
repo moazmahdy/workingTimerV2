@@ -175,7 +175,9 @@
                     app:layout_constraintHorizontal_bias="0.139"
                     app:layout_constraintStart_toEndOf="@id/dont_have_acc"
                     app:layout_constraintTop_toBottomOf="@id/loginButton"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="0.0"
+                    android:onClick="@{()->vm.openRegister()}"
+                    />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/dont_have_acc"

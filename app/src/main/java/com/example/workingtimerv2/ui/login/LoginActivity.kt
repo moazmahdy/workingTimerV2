@@ -1,15 +1,12 @@
 package com.example.workingtimerv2.ui.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.example.workingtimerv2.Navigator
 import com.example.workingtimerv2.R
 import com.example.workingtimerv2.base.BaseActivity
 import com.example.workingtimerv2.databinding.ActivityLoginBinding
-import com.example.workingtimerv2.model.AppUser
-import com.example.workingtimerv2.ui.home.HomeActivity
+import com.example.workingtimerv2.ui.employee.EmployeeActivity
 import com.example.workingtimerv2.ui.register.RegisterActivity
 
 class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Navigator{
@@ -26,9 +23,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Nav
 
     }
 
-    override fun openLoginScreen(){}
-    override fun openHomeScreen(userName: String) {
-        val intent = Intent(this, HomeActivity::class.java)
+    override fun openRegisterScreen() {
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun openEmployeeScreen(userName: String) {
+        val intent = Intent(this, EmployeeActivity::class.java)
         intent.putExtra("name", userName)
         startActivity(intent)
     }
