@@ -8,6 +8,7 @@ import com.example.workingtimerv2.Navigator
 import com.example.workingtimerv2.R
 import com.example.workingtimerv2.base.BaseActivity
 import com.example.workingtimerv2.databinding.ActivityLoginBinding
+import com.example.workingtimerv2.model.AppUser
 import com.example.workingtimerv2.ui.home.HomeActivity
 import com.example.workingtimerv2.ui.register.RegisterActivity
 
@@ -26,11 +27,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Nav
     }
 
     override fun openLoginScreen(){}
-
-    override fun openHomeScreen() {
+    override fun openHomeScreen(userName: String) {
         val intent = Intent(this, HomeActivity::class.java)
+        intent.putExtra("name", userName)
         startActivity(intent)
     }
+
 
     override fun getLayoutId(): Int = R.layout.activity_login
 

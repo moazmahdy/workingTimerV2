@@ -20,71 +20,65 @@
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="@dimen/full_margin"
             android:layout_marginStart="@dimen/full_margin"
-            tools:text="@string/hello_message"
-            android:textSize="36sp"
-            android:textColor="@color/purple_700"
+            android:layout_marginTop="@dimen/full_margin"
             android:text="@={vm.headerText}"
-            />
-
+            android:textColor="@color/purple_700"
+            android:textSize="36sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/hello_message" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/today_DateTxv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/header_text"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="@dimen/full_margin"
             android:layout_marginStart="@dimen/full_margin"
-            tools:text="1/25/2023"
-            android:textSize="20sp"
-            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/full_margin"
             android:text="@={vm.todayDate}"
-            />
-
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_text" />
 
         <View
             android:id="@+id/timer_bg"
             android:layout_width="match_parent"
             android:layout_height="90dp"
-            app:layout_constraintTop_toBottomOf="@id/today_DateTxv"
+            android:layout_marginTop="@dimen/half_margin"
             android:background="@color/purple_200"
-            android:layout_marginTop="@dimen/half_margin" />
+            app:layout_constraintTop_toBottomOf="@id/today_DateTxv" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/working_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/timer_bg"
-            app:layout_constraintStart_toStartOf="@id/timer_bg"
-            app:layout_constraintEnd_toEndOf="@id/timer_bg"
-            app:layout_constraintBottom_toTopOf="@id/timer_"
-            android:layout_marginTop="@dimen/full_margin"
             android:layout_marginStart="@dimen/full_margin"
+            android:layout_marginTop="@dimen/full_margin"
             android:text="Working Today"
-            android:textSize="20sp"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/timer_"
+            app:layout_constraintEnd_toEndOf="@id/timer_bg"
+            app:layout_constraintStart_toStartOf="@id/timer_bg"
+            app:layout_constraintTop_toTopOf="@id/timer_bg" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/timer_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/working_today"
-            app:layout_constraintStart_toStartOf="@id/timer_bg"
-            app:layout_constraintEnd_toEndOf="@id/timer_bg"
-            app:layout_constraintBottom_toBottomOf="@id/timer_bg"
-            android:layout_marginTop="@dimen/half_margin"
             android:layout_marginStart="@dimen/full_margin"
-            tools:text="00:39:20"
-            android:textSize="24sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            android:layout_marginTop="@dimen/half_margin"
             android:text="@={vm.timer}"
-            />
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/timer_bg"
+            app:layout_constraintEnd_toEndOf="@id/timer_bg"
+            app:layout_constraintStart_toStartOf="@id/timer_bg"
+            app:layout_constraintTop_toBottomOf="@id/working_today"
+            tools:text="00:39:20" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/stop_button"
@@ -92,12 +86,11 @@
             android:layout_height="90dp"
             android:adjustViewBounds="true"
             android:background="@drawable/stop"
+            android:onClick="@{()->vm.stop()}"
             app:layout_constraintBottom_toBottomOf="@id/timer_bg"
             app:layout_constraintEnd_toEndOf="@id/timer_bg"
             app:layout_constraintStart_toEndOf="@id/working_today"
-            app:layout_constraintTop_toTopOf="@id/timer_bg"
-            android:onClick="@{()->vm.stop()}"
-            />
+            app:layout_constraintTop_toTopOf="@id/timer_bg" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/pause_button"
@@ -105,13 +98,169 @@
             android:layout_height="90dp"
             android:adjustViewBounds="true"
             android:background="@drawable/pause"
+            android:onClick="@{()->vm.pause()}"
             app:layout_constraintBottom_toBottomOf="@id/timer_bg"
             app:layout_constraintEnd_toStartOf="@id/working_today"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/timer_bg"
-            android:onClick="@{()->vm.pause()}"
+            app:layout_constraintTop_toTopOf="@id/timer_bg" />
+
+        <View
+            android:id="@+id/week_bg"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_margin="24dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="#CA9C82"
+            app:layout_constraintEnd_toStartOf="@id/day_bg"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/timer_bg" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/timer_week_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/time"
+            app:layout_constraintEnd_toEndOf="@id/week_bg"
+            app:layout_constraintStart_toStartOf="@id/week_bg"
+            app:layout_constraintTop_toTopOf="@id/week_bg"
+            android:layout_marginTop="8dp"
+            />
+
+        <TextView
+            android:id="@+id/week_hour_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/week_bg"
+            app:layout_constraintStart_toStartOf="@id/week_bg"
+            app:layout_constraintTop_toBottomOf="@id/timer_week_image"
+            android:layout_marginTop="8dp"
+            tools:text="18h"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/week_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/week_bg"
+            app:layout_constraintStart_toStartOf="@id/week_bg"
+            app:layout_constraintTop_toBottomOf="@id/week_hour_TV"
+            android:layout_marginTop="4dp"
+            android:text="Week"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+
+        <View
+            android:id="@+id/day_bg"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_margin="24dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="#A482CA"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/week_bg"
+            app:layout_constraintTop_toBottomOf="@id/timer_bg" />
+
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/timer_day_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/time"
+            app:layout_constraintEnd_toEndOf="@id/day_bg"
+            app:layout_constraintStart_toStartOf="@id/day_bg"
+            app:layout_constraintTop_toTopOf="@id/day_bg"
+            android:layout_marginTop="8dp"
+            />
+
+        <TextView
+            android:id="@+id/day_hour_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/day_bg"
+            app:layout_constraintStart_toStartOf="@id/day_bg"
+            app:layout_constraintTop_toBottomOf="@id/timer_day_image"
+            android:layout_marginTop="8dp"
+            tools:text="8h"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/day_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/day_bg"
+            app:layout_constraintStart_toStartOf="@id/day_bg"
+            app:layout_constraintTop_toBottomOf="@id/day_hour_TV"
+            android:layout_marginTop="4dp"
+            android:text="Yesterday"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             />
 
 
+        <View
+            android:id="@+id/month_bg"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_margin="24dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="#CA9C82"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/week_bg" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/timer_month_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/time"
+            app:layout_constraintEnd_toEndOf="@id/month_bg"
+            app:layout_constraintStart_toStartOf="@id/month_bg"
+            app:layout_constraintTop_toTopOf="@id/month_bg"
+            android:layout_marginTop="8dp"
+            />
+
+        <TextView
+            android:id="@+id/month_hour_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/month_bg"
+            app:layout_constraintStart_toStartOf="@id/month_bg"
+            app:layout_constraintTop_toBottomOf="@id/timer_month_image"
+            android:layout_marginTop="8dp"
+            tools:text="8h"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/month_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/month_bg"
+            app:layout_constraintStart_toStartOf="@id/month_bg"
+            app:layout_constraintTop_toBottomOf="@id/month_hour_TV"
+            android:layout_marginTop="4dp"
+            android:text="Month"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

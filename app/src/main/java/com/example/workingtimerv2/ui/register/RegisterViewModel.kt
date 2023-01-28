@@ -12,6 +12,7 @@ import com.google.firebase.ktx.Firebase
 class RegisterViewModel: BaseViewModel<Navigator>() {
 
     // Variables to hold the input values for name, email, and password
+
     val name = ObservableField<String>()
     val email = ObservableField<String>()
     val password = ObservableField<String>()
@@ -24,6 +25,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
     // Firebase authentication instance
     private val auth = Firebase.auth
     val user = auth.currentUser
+    lateinit var userName: String
 
     // Method to create a new account
     fun createAccount() {
@@ -48,37 +50,40 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                     messageLiveData.value = task.exception!!.localizedMessage
                 }
                 else{
-                    sendEmailVerification()
+                    //sendEmailVerification()
                     // Create the user with email and password
                     createFirestoreUser(task.result.user!!.uid)
+                    navigator?.openHomeScreen(name.get().toString())
+//                    AppName.userName = name.toString()
                 }
             }
     }
     // Method to verify the email
-    private fun sendEmailVerification() {
-        val user = auth.currentUser
-        user?.sendEmailVerification()
-            ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    messageLiveData.value = "Verification email sent to ${user.email}"
-                } else {
-                    messageLiveData.value = "Failed to send verification email"
-                }
-            }
-    }
+//    private fun sendEmailVerification() {
+//        val user = auth.currentUser
+//        user?.sendEmailVerification()
+//            ?.addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    messageLiveData.value = "Verification email sent to ${user.email}"
+//                } else {
+//                    messageLiveData.value = "Failed to send verification email"
+//                }
+//            }
+//    }
 
     // Method to create the user in Firestore
     private fun createFirestoreUser(uid: String?) {
-        if (user != null && user.isEmailVerified) {
+        //if (user != null && user.isEmailVerified)
+            if (user != null){
             // Create the user object
-            val user = AppUser(name = name.get(), email = email.get())
+            val user = AppUser(id = uid, name = name.get(), email = email.get())
             // Add the user to Firestore
             addUserToFirestore(user, {
                 showLoading.value = false
                 // Save the user object to a DataUtils class
                 DataUtils.user = user
                 // Navigate to the home screen
-                navigator?.openLoginScreen()
+                navigator?.openHomeScreen(user.name!!)
             }, {
                 // Hide loading spinner
                 showLoading.value = false

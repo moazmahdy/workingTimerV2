@@ -19,9 +19,7 @@ class LoginViewModel : BaseViewModel<Navigator>() {
     val emailError = ObservableField<String>()
     val passwordError = ObservableField<String>()
 
-
     private val firebaseAuth = Firebase.auth
-
     fun login(){
         if(validate()){
             authWithFirebaseAuth()
@@ -38,10 +36,14 @@ class LoginViewModel : BaseViewModel<Navigator>() {
                 }
                 else {
                     val user = task.result.user
-                    if(user != null && user.isEmailVerified){
+                    //if(user != null && user.isEmailVerified)
+                        if(user != null){
+                        //    checkUserFromFireStore(task.result.user?.uid)
                         checkUserInFireStore(user.uid)
-                        navigator?.openHomeScreen()
-                    } else {
+                        //navigator?.openHomeScreen(user.displayName.toString())
+                        //navigator?.openHomeScreen(RegisterViewModel.name.get().toString())
+                            navigator?.openHomeScreen(user.displayName.toString())
+                        } else {
                         messageLiveData.value = "Email is not verified, please verify your email before logging in."
                     }
                 }
@@ -61,7 +63,7 @@ class LoginViewModel : BaseViewModel<Navigator>() {
                     messageLiveData.value = "Invalid Email or Password"
                     return@OnSuccessListener
                 }
-                navigator?.openHomeScreen()
+                navigator?.openHomeScreen(user.name.toString())
             }
         ) {
             showLoading.value = false
@@ -70,7 +72,6 @@ class LoginViewModel : BaseViewModel<Navigator>() {
     }
     private fun validate(): Boolean{
         var isValid = true
-
         if(email.get().isNullOrBlank()){
             emailError.set("Please enter email")
             isValid = false
@@ -85,8 +86,6 @@ class LoginViewModel : BaseViewModel<Navigator>() {
         else{
             passwordError.set(null)
         }
-
         return isValid
     }
-
 }

@@ -7,6 +7,7 @@ import com.example.workingtimerv2.Navigator
 import com.example.workingtimerv2.R
 import com.example.workingtimerv2.base.BaseActivity
 import com.example.workingtimerv2.databinding.ActivityRegisterBinding
+import com.example.workingtimerv2.model.AppUser
 import com.example.workingtimerv2.ui.home.HomeActivity
 import com.example.workingtimerv2.ui.login.LoginActivity
 
@@ -35,6 +36,9 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
         startActivity(intent)
     }
 
-    override fun openHomeScreen(){}
-
+    override fun openHomeScreen(userName: String) {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.putExtra("name", userName)
+        startActivity(intent)
+    }
 }

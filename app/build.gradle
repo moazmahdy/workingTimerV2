@@ -88,4 +88,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.4.1'
 
 
+    //calender
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
+
 }
