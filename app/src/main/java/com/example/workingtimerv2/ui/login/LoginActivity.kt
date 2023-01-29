@@ -9,7 +9,7 @@ import com.example.workingtimerv2.databinding.ActivityLoginBinding
 import com.example.workingtimerv2.ui.employee.EmployeeActivity
 import com.example.workingtimerv2.ui.register.RegisterActivity
 
-class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Navigator{
+class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Navigator {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +23,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() , Nav
 
     }
 
-    override fun openRegisterScreen() {
+    override fun openRegister() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }

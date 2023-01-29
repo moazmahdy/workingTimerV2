@@ -16,10 +16,12 @@ class EmployeeActivity : BaseActivity<ActivityEmployeeBinding, EmployeeViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivityEmployeeBinding>(this, R.layout.activity_employee)
-        val viewModel = ViewModelProvider(this)[EmployeeViewModel::class.java]
+        //val binding = DataBindingUtil.setContentView<ActivityEmployeeBinding>(this, R.layout.activity_employee)
+        //val viewModel = ViewModelProvider(this)[EmployeeViewModel::class.java]
+        //binding.vm = viewModel
 
-        binding.vm = viewModel
+        viewDataBinding.vm = viewModel
+        viewModel.navigator = this
         // I call the startTimer function from viewModel to start the timer when Activity is created
         // When activity is created means the user is successfully signed in
         viewModel.startTimer()

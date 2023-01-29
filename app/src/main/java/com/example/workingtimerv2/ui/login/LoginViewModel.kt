@@ -89,6 +89,6 @@ class LoginViewModel : BaseViewModel<Navigator>() {
     }
 
     fun openRegister(){
-        navigator?.openRegisterScreen()
+        navigator?.openRegister()
     }
 }

@@ -1,7 +1,6 @@
 package com.example.workingtimerv2.ui.employee
 
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
 import com.example.workingtimerv2.base.BaseViewModel
