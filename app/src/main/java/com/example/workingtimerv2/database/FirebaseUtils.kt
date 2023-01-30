@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -30,6 +31,14 @@ fun signIn(uid: String,
     val userCollection = db.collection(AppUser.COLLECTION_NAME)
     userCollection.document(uid)
         .get()
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener)
+}
+
+fun getUsers(onSuccessListener: OnSuccessListener<QuerySnapshot>,
+             onFailureListener: OnFailureListener){
+    val collection = getCollection(AppUser.COLLECTION_NAME)
+    collection.get()
         .addOnSuccessListener(onSuccessListener)
         .addOnFailureListener(onFailureListener)
 }

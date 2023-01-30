@@ -19,7 +19,6 @@ class EmployeeActivity : BaseActivity<ActivityEmployeeBinding, EmployeeViewModel
         //val binding = DataBindingUtil.setContentView<ActivityEmployeeBinding>(this, R.layout.activity_employee)
         //val viewModel = ViewModelProvider(this)[EmployeeViewModel::class.java]
         //binding.vm = viewModel
-
         viewDataBinding.vm = viewModel
         viewModel.navigator = this
         // I call the startTimer function from viewModel to start the timer when Activity is created
