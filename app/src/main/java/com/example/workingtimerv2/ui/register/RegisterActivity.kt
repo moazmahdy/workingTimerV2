@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.workingtimerv2.R
 import com.example.workingtimerv2.base.BaseActivity
 import com.example.workingtimerv2.databinding.ActivityRegisterBinding
+import com.example.workingtimerv2.model.AppUser
 import com.example.workingtimerv2.ui.employee.EmployeeActivity
 import com.example.workingtimerv2.ui.login.LoginActivity
 
@@ -34,9 +35,9 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
         startActivity(intent)
     }
 
-    override fun openEmployeeScreen(userName: String) {
+    override fun openEmployeeScreen(user: AppUser) {
         val intent = Intent(this, EmployeeActivity::class.java)
-        intent.putExtra("name", userName)
+        intent.putExtra("name", user)
         startActivity(intent)
     }
 }

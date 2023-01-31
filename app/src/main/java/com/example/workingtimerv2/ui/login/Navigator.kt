@@ -1,6 +1,8 @@
 package com.example.workingtimerv2.ui.login
 
+import com.example.workingtimerv2.model.AppUser
+
 interface Navigator {
     fun openRegister()
-    fun openEmployeeScreen(userName: String)
+    fun openEmployeeScreen(user: AppUser)
 }

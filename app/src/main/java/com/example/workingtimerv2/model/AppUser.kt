@@ -7,13 +7,12 @@ import kotlinx.parcelize.Parcelize
 data class AppUser(
     var id: String? = null,
     var name: String? = null,
-    var email: String?= null,
-    var dayHour: String?= null,
-    var weekHour: String?= null,
-    var monthHour: String?= null
-):Parcelable
-{
-    companion object{
+    val email: String? = null,
+    var yesterday: Long? = 0L,
+    var week: Long? = 0L,
+    var month: Long? = 0L
+) : Parcelable {
+    companion object {
         const val COLLECTION_NAME = "users"
     }
 }

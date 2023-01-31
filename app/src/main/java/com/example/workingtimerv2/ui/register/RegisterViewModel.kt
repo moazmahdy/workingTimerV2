@@ -52,7 +52,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                     //sendEmailVerification()
                     // Create the user with email and password
                     createFirestoreUser(task.result.user!!.uid)
-                    navigator?.openEmployeeScreen(name.get().toString())
+                    //navigator?.openEmployeeScreen(name.get().toString())
 //                    AppName.userName = name.toString()
                 }
             }
@@ -82,7 +82,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                 // Save the user object to a DataUtils class
                 DataUtils.user = user
                 // Navigate to the home screen
-                navigator?.openEmployeeScreen(user.name!!)
+                navigator?.openEmployeeScreen(user)
             }, {
                 // Hide loading spinner
                 showLoading.value = false

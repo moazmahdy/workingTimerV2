@@ -24,8 +24,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/header_text"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/logout_ic"
             android:layout_margin="30dp"
+            android:background="@drawable/logout_ic"
             android:onClick="@{()->vm.logout()}"
             />
 
@@ -37,7 +37,7 @@
             android:layout_marginTop="@dimen/full_margin"
             android:text="@={vm.headerText}"
             android:textColor="@color/purple_700"
-            android:textSize="36sp"
+            android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/logout_ic"
             app:layout_constraintTop_toTopOf="parent"
@@ -152,7 +152,7 @@
             app:layout_constraintTop_toBottomOf="@id/timer_week_image"
             android:layout_marginTop="8dp"
             tools:text="18h"
-            android:text="@={vm.weekHourTV}"
+            android:text="@={vm.weekWorkedTimeTV}"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -206,8 +206,8 @@
             app:layout_constraintTop_toBottomOf="@id/timer_day_image"
             android:layout_marginTop="8dp"
             tools:text="8h"
-            android:text="@={vm.dayHourTV}"
             android:textSize="22sp"
+            android:text="@={vm.yesterdayWorkedTimeTV}"
             android:textStyle="bold"
             android:textColor="@color/black"
             />
@@ -260,8 +260,8 @@
             app:layout_constraintTop_toBottomOf="@id/timer_month_image"
             android:layout_marginTop="8dp"
             tools:text="8h"
-            android:text="@={vm.monthHourTV}"
             android:textSize="22sp"
+            android:text="@={vm.MonthWorkedTimeTV}"
             android:textStyle="bold"
             android:textColor="@color/black"
             />

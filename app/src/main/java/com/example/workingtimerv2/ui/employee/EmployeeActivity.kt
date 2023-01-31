@@ -1,3 +1,4 @@
+
 package com.example.workingtimerv2.ui.employee
 
 
@@ -9,26 +10,34 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.workingtimerv2.R
 import com.example.workingtimerv2.base.BaseActivity
 import com.example.workingtimerv2.databinding.ActivityEmployeeBinding
+import com.example.workingtimerv2.model.AppUser
 import com.example.workingtimerv2.ui.login.LoginActivity
 
 class EmployeeActivity : BaseActivity<ActivityEmployeeBinding, EmployeeViewModel>(), Navigator {
 
+    lateinit var user: AppUser
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //val binding = DataBindingUtil.setContentView<ActivityEmployeeBinding>(this, R.layout.activity_employee)
         //val viewModel = ViewModelProvider(this)[EmployeeViewModel::class.java]
         //binding.vm = viewModel
+
         viewDataBinding.vm = viewModel
         viewModel.navigator = this
         // I call the startTimer function from viewModel to start the timer when Activity is created
         // When activity is created means the user is successfully signed in
         viewModel.startTimer()
-        var userName: String = intent.getStringExtra("name")!!
+        user = intent.getParcelableExtra("name")!!
         viewModel.setDate()
-        viewModel.setUserName(userName)
+        viewModel.setUserName(user.name!!)
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateViews(user.yesterday!!, user.week!!, user.month!!)
+    }
     override fun getLayoutId(): Int {
         return R.layout.activity_employee
     }

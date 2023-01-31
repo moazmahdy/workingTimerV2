@@ -1,26 +1,74 @@
+
 package com.example.workingtimerv2.ui.employee
 
 
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
+import com.example.workingtimerv2.DataUtils.user
 import com.example.workingtimerv2.base.BaseViewModel
+import com.example.workingtimerv2.database.getCollection
+import com.example.workingtimerv2.model.AppUser
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+
 import kotlinx.coroutines.*
 import java.util.*
 
 class EmployeeViewModel : BaseViewModel<Navigator>() {
 
     var headerText = ObservableField<String>()
-    var timer = ObservableField<String>()
-    var todayDate = ObservableField<String>()
-    var weekHourTV = ObservableField<String>()
-    var dayHourTV = ObservableField<String>()
-    var monthHourTV = ObservableField<String>()
+    var timer      = ObservableField<String>()
+    var todayDate  = ObservableField<String>()
+
+
+    var yesterdayWorkedTimeTV  = ObservableField<String>()
+    var weekWorkedTimeTV       = ObservableField<String>()
+    var MonthWorkedTimeTV      = ObservableField<String>()
+
     private var remainingTime = 7 * 60 * 60 * 1000L
     private var job: Job? = null
     private var isTimerRunning = false
     private val calendar = Calendar.getInstance()
 
+
+    private var yesterdayWorkedTime = 0L
+    private var weekWorkedTime      = 0L
+    private var monthWorkedTime     = 0L
+
+
+
+//    fun setWorkedTimes(){
+//        val db = FirebaseFirestore.getInstance()
+//        val currentUser = FirebaseAuth.getInstance().currentUser
+//        val userRef = db.collection(AppUser.COLLECTION_NAME).document(currentUser!!.uid)
+//
+//        userRef.get().addOnSuccessListener { documentSnapshot ->
+//            val user = documentSnapshot.toObject(AppUser::class.java)
+//
+//            yesterdayWorkedTime = user!!.yesterday!!
+//            weekWorkedTime = user.week!!
+//            monthWorkedTime = user.month!!
+//
+//            updateViews(yesterdayWorkedTime, weekWorkedTime, monthWorkedTime)
+//        }.addOnFailureListener { e ->
+//            // handle failure
+//        }
+//
+//
+//
+//    }
+
+
+    fun updateViews(yesterdayHours: Long, weekHours: Long, monthHours: Long) {
+        yesterdayWorkedTimeTV.set("$yesterdayHours h")
+        yesterdayWorkedTimeTV.notifyChange()
+        weekWorkedTimeTV.set("$weekHours h")
+        weekWorkedTimeTV.notifyChange()
+        MonthWorkedTimeTV.set("$monthHours h")
+        MonthWorkedTimeTV.notifyChange()
+    }
 
     // Method to start the timer
     fun startTimer() {
@@ -35,6 +83,8 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
             isTimerRunning = true
         }
     }
+    @JvmName("getTimer1")
+    fun getTimer() = timer
 
     // Method to make the text timer -- change text to current time
     private suspend fun updateTimerText() {
@@ -46,44 +96,75 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
             timer.set(timerText)
         }
     }
-
     // Method to stop the timer
     fun stop() {
         job?.cancel()
-        saveHourTime()
-        saveWeekTime()
-        saveMonthHour()
-    }
+        // save worked time to yesterday
+        yesterdayWorkedTime = remainingTime
+        saveWorkedTimetoYesterdayFieldInTheFireStore()
+        // add worked time to the week
+        weekWorkedTime += yesterdayWorkedTime
+        monthWorkedTime += weekWorkedTime
+        val currentDate = Calendar.getInstance().time
+        val endOfWeek = Calendar.getInstance()
+        endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
+        if (currentDate >= endOfWeek.time) {
+            // it's the end of the week, save the worked time to firestore
+            saveWorkedTimetoWeekFieldInTheFireStore()
 
-    private fun saveHourTime() {
-        val hours = remainingTime / (60 * 60 * 1000) % 24
-        val total = 7 - hours
-        dayHourTV.set(total.toString() + "h")
-    }
+            // add worked time to the month
+            monthWorkedTime += weekWorkedTime
 
-    private fun saveWeekTime() {
-        var counter = 0
-        while (counter < 7){
-            val hours = remainingTime / (60 * 60 * 1000) % 24
-            val totalInDay = 7 - hours
-            var totalInWeek: Long = 0
-            totalInWeek += totalInDay
-            weekHourTV.set(totalInWeek.toString() + "h")
-            counter++
+            val endOfMonth = Calendar.getInstance()
+            endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
+            if (currentDate >= endOfMonth.time) {
+                // it's the end of the month, save the worked time to firestore
+                saveWorkedTimetoMonthFieldInTheFireStore()
+
+                // reset the month because we will start a new month
+                monthWorkedTime = 0
+            }
+
+            // reset the week because we will start a new week
+            weekWorkedTime = 0
         }
+        updateViews(yesterdayWorkedTime, weekWorkedTime, monthWorkedTime)
+    }
+    private fun saveWorkedTimetoYesterdayFieldInTheFireStore() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        val appUserRef =
+            FirebaseFirestore.getInstance().collection(AppUser.COLLECTION_NAME).document(userId)
+        appUserRef.update("yesterday", yesterdayWorkedTime)
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+            }
     }
 
-    private fun saveMonthHour() {
-        var counter = 0
-        while (counter < 30){
-            val hours = remainingTime / (60 * 60 * 1000) % 24
-            val totalInDay = 7 - hours
-            var totalInMonth: Long = 0
-            totalInMonth += totalInDay
-            monthHourTV.set(totalInMonth.toString() + "h")
-            counter++
-        }
+    private fun saveWorkedTimetoWeekFieldInTheFireStore() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        val appUserRef =
+            FirebaseFirestore.getInstance().collection(AppUser.COLLECTION_NAME).document(userId)
+        appUserRef.update("week", FieldValue.increment(weekWorkedTime))
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+            }
+
     }
+    private fun saveWorkedTimetoMonthFieldInTheFireStore() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        val appUserRef =
+            FirebaseFirestore.getInstance().collection(AppUser.COLLECTION_NAME).document(userId)
+
+        appUserRef.update("month", FieldValue.increment(monthWorkedTime))
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+            }
+    }
+
+
 
     // Method to pause the timer
     // If user clicks on the button again it will continue the timer

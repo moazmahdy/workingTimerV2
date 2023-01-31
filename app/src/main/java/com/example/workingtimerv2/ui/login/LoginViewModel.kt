@@ -63,7 +63,7 @@ class LoginViewModel : BaseViewModel<Navigator>() {
                     return@OnSuccessListener
                 } else {
                     DataUtils.user = user
-                    navigator?.openEmployeeScreen(user.name.toString())
+                    navigator?.openEmployeeScreen(user)
                 }
             }, onFailureListener = {
                 showLoading.value = false
