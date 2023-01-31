@@ -98,37 +98,40 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     }
     // Method to stop the timer
     fun stop() {
-        job?.cancel()
-        // save worked time to yesterday
-        yesterdayWorkedTime = remainingTime
-        saveWorkedTimetoYesterdayFieldInTheFireStore()
-        // add worked time to the week
-        weekWorkedTime += yesterdayWorkedTime
-        monthWorkedTime += weekWorkedTime
-        val currentDate = Calendar.getInstance().time
-        val endOfWeek = Calendar.getInstance()
-        endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
-        if (currentDate >= endOfWeek.time) {
-            // it's the end of the week, save the worked time to firestore
-            saveWorkedTimetoWeekFieldInTheFireStore()
-
-            // add worked time to the month
+        if (isTimerRunning){
+            job?.cancel()
+            // save worked time to yesterday
+            yesterdayWorkedTime = remainingTime
+            saveWorkedTimetoYesterdayFieldInTheFireStore()
+            // add worked time to the week
+            weekWorkedTime += yesterdayWorkedTime
             monthWorkedTime += weekWorkedTime
+            val currentDate = Calendar.getInstance().time
+            val endOfWeek = Calendar.getInstance()
+            endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
+            if (currentDate <= endOfWeek.time) {
+                // it's the end of the week, save the worked time to firestore
+                saveWorkedTimetoWeekFieldInTheFireStore()
 
-            val endOfMonth = Calendar.getInstance()
-            endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
-            if (currentDate >= endOfMonth.time) {
-                // it's the end of the month, save the worked time to firestore
-                saveWorkedTimetoMonthFieldInTheFireStore()
+                // add worked time to the month
+                monthWorkedTime += weekWorkedTime
 
-                // reset the month because we will start a new month
-                monthWorkedTime = 0
+                val endOfMonth = Calendar.getInstance()
+                endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
+                if (currentDate <= endOfMonth.time) {
+                    // it's the end of the month, save the worked time to firestore
+                    saveWorkedTimetoMonthFieldInTheFireStore()
+                } else {
+                    // reset the month because we will start a new month
+                    monthWorkedTime = 0
+                }
+            } else {
+                // reset the week because we will start a new week
+                weekWorkedTime = 0
             }
-
-            // reset the week because we will start a new week
-            weekWorkedTime = 0
+            updateViews(yesterdayWorkedTime, weekWorkedTime, monthWorkedTime)
+            isTimerRunning = false
         }
-        updateViews(yesterdayWorkedTime, weekWorkedTime, monthWorkedTime)
     }
     private fun saveWorkedTimetoYesterdayFieldInTheFireStore() {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
@@ -156,15 +159,12 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
         val appUserRef =
             FirebaseFirestore.getInstance().collection(AppUser.COLLECTION_NAME).document(userId)
-
         appUserRef.update("month", FieldValue.increment(monthWorkedTime))
             .addOnSuccessListener {
             }
             .addOnFailureListener {
             }
     }
-
-
 
     // Method to pause the timer
     // If user clicks on the button again it will continue the timer
