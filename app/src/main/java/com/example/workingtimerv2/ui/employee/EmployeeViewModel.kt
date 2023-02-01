@@ -1,8 +1,20 @@
 package com.example.workingtimerv2.ui.employee
 
 
+import android.Manifest
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Settings.Global.getString
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
 import com.example.workingtimerv2.R
@@ -40,7 +52,16 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     lateinit var startButton: AppCompatImageButton
     lateinit var pauseButton: AppCompatImageButton
 
-//    fun setWorkedTimes(){
+
+    var context: Context? = null
+
+
+    val hours   = remainingTime / (60 * 60 * 1000) % 24
+    val minutes = remainingTime / (60 * 1000) % 60
+    val seconds = remainingTime / 1000 % 60
+    val timerText = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+
+    //    fun setWorkedTimes(){
 //        val db = FirebaseFirestore.getInstance()
 //        val currentUser = FirebaseAuth.getInstance().currentUser
 //        val userRef = db.collection(AppUser.COLLECTION_NAME).document(currentUser!!.uid)
@@ -94,8 +115,10 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
                 while (remainingTime > 0) {
                     delay(1000)
                     remainingTime -= 1000
+                    showNotification()
                     updateTimerText()
                 }
+                saveWorkedTimetoYesterdayFieldInTheFireStore(time = remainingTime)
             }
             startButton.visibility = View.GONE
             pauseButton.visibility = View.VISIBLE
@@ -104,19 +127,16 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     }
 
 
-    @JvmName("getTimer1")
-    fun getTimer() = timer
+    fun setStartTimerText() = timer.set(timerText)
+
 
     // Method to make the text timer -- change text to current time
     private suspend fun updateTimerText() {
-        val hours   = remainingTime / (60 * 60 * 1000) % 24
-        val minutes = remainingTime / (60 * 1000) % 60
-        val seconds = remainingTime / 1000 % 60
-        val timerText = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
         withContext(Dispatchers.Main) {
             timer.set(timerText)
         }
     }
+
     // Method to stop the timer
 //    fun stop() {
 //        job?.cancel()
@@ -194,9 +214,10 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
                 isTimerRunning = false
             }
         }
+
     }
 
-    fun getWorkedTimeFromFireStore(callback: (week : Long, month: Long) -> Unit) {
+    private fun getWorkedTimeFromFireStore(callback: (week : Long, month: Long) -> Unit) {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -212,7 +233,7 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     }
 
 
-    fun saveWorkedTimetoYesterdayFieldInTheFireStore(time: Long) {
+    private fun saveWorkedTimetoYesterdayFieldInTheFireStore(time: Long) {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -275,4 +296,34 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         FirebaseAuth.getInstance().signOut();
         navigator?.openLoginScreen()
     }
+
+
+    fun showNotification() {
+
+        val intent = Intent(context, EmployeeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
+        val builder = NotificationCompat.Builder(context!!, "timer_notification")
+            .setSmallIcon(R.drawable.timer_ic)
+            .setContentTitle("The Left Time:")
+            .setContentText(timerText)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        // Display the notification
+        with(NotificationManagerCompat.from(context!!)) {
+            if (ActivityCompat.checkSelfPermission(
+                    context!!,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                return
+            }
+            notify(1, builder)
+        }
+    }
+
 }

@@ -12,7 +12,11 @@ import com.google.firebase.ktx.Firebase
 class LoginViewModel : BaseViewModel<Navigator>() {
 
     // Variables to hold the input values for name, email, and password
-    val email = ObservableField<String>()
+    val email = object : ObservableField<String>() {
+        override fun set(value: String?) {
+            super.set(value?.trim())
+        }
+    }
     val password = ObservableField<String>()
 
     // Variables to hold the error messages for name, email, and password
