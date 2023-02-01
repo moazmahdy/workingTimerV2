@@ -56,10 +56,6 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     var context: Context? = null
 
 
-    val hours   = remainingTime / (60 * 60 * 1000) % 24
-    val minutes = remainingTime / (60 * 1000) % 60
-    val seconds = remainingTime / 1000 % 60
-    val timerText = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
 
     //    fun setWorkedTimes(){
 //        val db = FirebaseFirestore.getInstance()
@@ -81,6 +77,15 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
 //
 //
 //    }
+
+    fun setTimerText(text: String): String{
+        val hours   = remainingTime / (60 * 60 * 1000) % 24
+        val minutes = remainingTime / (60 * 1000) % 60
+        val seconds = remainingTime / 1000 % 60
+        val text = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+
+        return text
+    }
 
     fun updateViews(yesterdayWorked: Long, weekWorked: Long, monthWorked: Long) {
 
@@ -127,13 +132,21 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     }
 
 
-    fun setStartTimerText() = timer.set(timerText)
+    fun setStartTimerText() {
+
+        timer.set(setTimerText(remainingTime.toString()))
+    }
 
 
     // Method to make the text timer -- change text to current time
     private suspend fun updateTimerText() {
+        val hours   = remainingTime / (60 * 60 * 1000) % 24
+        val minutes = remainingTime / (60 * 1000) % 60
+        val seconds = remainingTime / 1000 % 60
+        val timerText = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+
         withContext(Dispatchers.Main) {
-            timer.set(timerText)
+            timer.set(setTimerText(remainingTime.toString()))
         }
     }
 
@@ -300,6 +313,7 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
 
     fun showNotification() {
 
+
         val intent = Intent(context, EmployeeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
@@ -307,7 +321,7 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         val builder = NotificationCompat.Builder(context!!, "timer_notification")
             .setSmallIcon(R.drawable.timer_ic)
             .setContentTitle("The Left Time:")
-            .setContentText(timerText)
+            .setContentText(setTimerText(remainingTime.toString()))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .build()
