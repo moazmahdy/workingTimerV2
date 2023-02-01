@@ -5,6 +5,7 @@ package com.example.workingtimerv2.ui.employee
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.workingtimerv2.R
@@ -27,16 +28,17 @@ class EmployeeActivity : BaseActivity<ActivityEmployeeBinding, EmployeeViewModel
         viewModel.navigator = this
         // I call the startTimer function from viewModel to start the timer when Activity is created
         // When activity is created means the user is successfully signed in
-        viewModel.startTimer()
         user = intent.getParcelableExtra("name")!!
         viewModel.setDate()
         viewModel.setUserName(user.name!!)
 
+        viewModel.startButton = viewDataBinding.startButton
+        viewModel.pauseButton = viewDataBinding.pauseButton
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.updateViews(user.yesterday!!, user.week!!, user.month!!)
+        viewModel.updateViews()
     }
     override fun getLayoutId(): Int {
         return R.layout.activity_employee

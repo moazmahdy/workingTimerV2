@@ -1,13 +1,12 @@
-
 package com.example.workingtimerv2.ui.employee
 
 
-import android.util.Log
+import android.view.View
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
-import com.example.workingtimerv2.DataUtils.user
+import com.example.workingtimerv2.R
 import com.example.workingtimerv2.base.BaseViewModel
-import com.example.workingtimerv2.database.getCollection
 import com.example.workingtimerv2.model.AppUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -28,8 +27,9 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     var MonthWorkedTimeTV      = ObservableField<String>()
 
     private var remainingTime = 7 * 60 * 60 * 1000L
-    private var job: Job? = null
-    private var isTimerRunning = false
+    private var TotalTime     = 7 * 60 * 60 * 1000L
+    private var job: Job?     = null
+    private var isTimerRunning= false
     private val calendar = Calendar.getInstance()
 
 
@@ -37,7 +37,8 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     private var weekWorkedTime      = 0L
     private var monthWorkedTime     = 0L
 
-
+    lateinit var startButton: AppCompatImageButton
+    lateinit var pauseButton: AppCompatImageButton
 
 //    fun setWorkedTimes(){
 //        val db = FirebaseFirestore.getInstance()
@@ -60,14 +61,30 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
 //
 //    }
 
+    fun updateViews() {
 
-    fun updateViews(yesterdayHours: Long, weekHours: Long, monthHours: Long) {
-        yesterdayWorkedTimeTV.set("$yesterdayHours h")
+        val yesterdayWorkedTimeInMinutes = (yesterdayWorkedTime / 1000) /60
+        val yesterdayHourss = yesterdayWorkedTimeInMinutes / 60
+        val yesterdayMinutes = yesterdayWorkedTimeInMinutes % 60
+
+        yesterdayWorkedTimeTV.set("${yesterdayHourss}h ${yesterdayMinutes}m")
         yesterdayWorkedTimeTV.notifyChange()
-        weekWorkedTimeTV.set("$weekHours h")
+
+        val weekWorkedTimeInMinutes = (weekWorkedTime / 1000) /60
+        val weekHourss = weekWorkedTimeInMinutes / 60
+        val weekMinutes = weekWorkedTimeInMinutes % 60
+
+        weekWorkedTimeTV.set("${weekHourss}h ${weekMinutes}m")
         weekWorkedTimeTV.notifyChange()
-        MonthWorkedTimeTV.set("$monthHours h")
+
+        val monthWorkedTimeInMinutes = (monthWorkedTime / 1000) /60
+        val monthHourss = monthWorkedTimeInMinutes / 60
+        val monthMinutes = monthWorkedTimeInMinutes % 60
+
+        MonthWorkedTimeTV.set("${monthHourss}h ${monthMinutes}m")
         MonthWorkedTimeTV.notifyChange()
+
+
     }
 
     // Method to start the timer
@@ -80,15 +97,19 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
                     updateTimerText()
                 }
             }
+            startButton.visibility = View.GONE
+            pauseButton.visibility = View.VISIBLE
             isTimerRunning = true
         }
     }
+
+
     @JvmName("getTimer1")
     fun getTimer() = timer
 
     // Method to make the text timer -- change text to current time
     private suspend fun updateTimerText() {
-        val hours = remainingTime / (60 * 60 * 1000) % 24
+        val hours   = remainingTime / (60 * 60 * 1000) % 24
         val minutes = remainingTime / (60 * 1000) % 60
         val seconds = remainingTime / 1000 % 60
         val timerText = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
@@ -97,11 +118,48 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         }
     }
     // Method to stop the timer
+//    fun stop() {
+//        job?.cancel()
+//        // save worked time to yesterday
+//        yesterdayWorkedTime = remainingTime
+//        saveWorkedTimetoYesterdayFieldInTheFireStore()
+//        // add worked time to the week
+//        val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+//        if (currentDay != Calendar.FRIDAY && currentDay != Calendar.SATURDAY) {
+//            weekWorkedTime += yesterdayWorkedTime
+//            monthWorkedTime += yesterdayWorkedTime
+//        }
+//        val currentDate = Calendar.getInstance().time
+//        val endOfWeek = Calendar.getInstance()
+//        endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
+//        if (currentDate >= endOfWeek.time) {
+//            // it's the end of the week, save the worked time to firestore
+//            saveWorkedTimetoWeekFieldInTheFireStore()
+//
+//            // add worked time to the month
+//            monthWorkedTime += weekWorkedTime
+//
+//            val endOfMonth = Calendar.getInstance()
+//            endOfMonth.set(Calendar.DAY_OF_MONTH, endOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH))
+//            if (currentDate >= endOfMonth.time) {
+//                // it's the end of the month, save the worked time to firestore
+//                saveWorkedTimetoMonthFieldInTheFireStore()
+//
+//                // reset the month because we will start a new month
+//                monthWorkedTime = 0
+//            }
+//
+//            // reset the week because we will start a new week
+//            weekWorkedTime = 0
+//        }
+//        updateViews(yesterdayWorkedTime, weekWorkedTime, monthWorkedTime)
+//    }
+
     fun stop() {
         if (isTimerRunning){
             job?.cancel()
             // save worked time to yesterday
-            yesterdayWorkedTime = remainingTime
+            yesterdayWorkedTime =  TotalTime - remainingTime
             saveWorkedTimetoYesterdayFieldInTheFireStore()
             // add worked time to the week
             weekWorkedTime += yesterdayWorkedTime
@@ -129,14 +187,16 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
                 // reset the week because we will start a new week
                 weekWorkedTime = 0
             }
-            updateViews(yesterdayWorkedTime, weekWorkedTime, monthWorkedTime)
+            updateViews()
             isTimerRunning = false
         }
     }
     private fun saveWorkedTimetoYesterdayFieldInTheFireStore() {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
         val appUserRef =
             FirebaseFirestore.getInstance().collection(AppUser.COLLECTION_NAME).document(userId)
+
         appUserRef.update("yesterday", yesterdayWorkedTime)
             .addOnSuccessListener {
             }
@@ -148,7 +208,8 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
         val appUserRef =
             FirebaseFirestore.getInstance().collection(AppUser.COLLECTION_NAME).document(userId)
-        appUserRef.update("week", FieldValue.increment(weekWorkedTime))
+
+        appUserRef.update("month", FieldValue.increment(monthWorkedTime))
             .addOnSuccessListener {
             }
             .addOnFailureListener {
@@ -159,12 +220,14 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
         val appUserRef =
             FirebaseFirestore.getInstance().collection(AppUser.COLLECTION_NAME).document(userId)
-        appUserRef.update("month", FieldValue.increment(monthWorkedTime))
+
+        appUserRef.update("week", FieldValue.increment(weekWorkedTime))
             .addOnSuccessListener {
             }
             .addOnFailureListener {
             }
     }
+
 
     // Method to pause the timer
     // If user clicks on the button again it will continue the timer
@@ -172,6 +235,8 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         if (isTimerRunning) {
             job?.cancel()
             isTimerRunning = false
+            startButton.visibility = View.VISIBLE
+            pauseButton.visibility = View.GONE
         } else {
             startTimer()
         }
