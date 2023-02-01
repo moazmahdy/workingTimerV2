@@ -1,4 +1,3 @@
-
 package com.example.workingtimerv2.ui.employee
 
 
@@ -57,10 +56,6 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     var context: Context? = null
 
 
-    val hours   = remainingTime / (60 * 60 * 1000) % 24
-    val minutes = remainingTime / (60 * 1000) % 60
-    val seconds = remainingTime / 1000 % 60
-    val timerText = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
 
     //    fun setWorkedTimes(){
 //        val db = FirebaseFirestore.getInstance()
@@ -82,6 +77,15 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
 //
 //
 //    }
+
+    fun setTimerText(text: String): String{
+        val hours   = remainingTime / (60 * 60 * 1000) % 24
+        val minutes = remainingTime / (60 * 1000) % 60
+        val seconds = remainingTime / 1000 % 60
+        val text = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+
+        return text
+    }
 
     fun updateViews(yesterdayWorked: Long, weekWorked: Long, monthWorked: Long) {
 
@@ -128,13 +132,21 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
     }
 
 
-    fun setStartTimerText() = timer.set(timerText)
+    fun setStartTimerText() {
+
+        timer.set(setTimerText(remainingTime.toString()))
+    }
 
 
     // Method to make the text timer -- change text to current time
     private suspend fun updateTimerText() {
+        val hours   = remainingTime / (60 * 60 * 1000) % 24
+        val minutes = remainingTime / (60 * 1000) % 60
+        val seconds = remainingTime / 1000 % 60
+        val timerText = "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+
         withContext(Dispatchers.Main) {
-            timer.set(timerText)
+            timer.set(setTimerText(remainingTime.toString()))
         }
     }
 
@@ -215,6 +227,7 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
                 isTimerRunning = false
             }
         }
+
     }
 
     private fun getWorkedTimeFromFireStore(callback: (week : Long, month: Long) -> Unit) {
@@ -267,6 +280,7 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
             }
     }
 
+
     // Method to pause the timer
     // If user clicks on the button again it will continue the timer
     fun pause() {
@@ -280,6 +294,7 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         }
     }
 
+
     fun setDate(){
         todayDate.set("" +calendar.get(Calendar.DAY_OF_MONTH)
                 + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" +
@@ -290,23 +305,27 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
         headerText.set("Hello $name \n" +
                 "How are you today")
     }
-
     fun logout(){
         FirebaseAuth.getInstance().signOut();
         navigator?.openLoginScreen()
     }
 
+
     fun showNotification() {
+
+
         val intent = Intent(context, EmployeeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
         val builder = NotificationCompat.Builder(context!!, "timer_notification")
             .setSmallIcon(R.drawable.timer_ic)
             .setContentTitle("The Left Time:")
-            .setContentText(timerText)
+            .setContentText(setTimerText(remainingTime.toString()))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .build()
+
         // Display the notification
         with(NotificationManagerCompat.from(context!!)) {
             if (ActivityCompat.checkSelfPermission(
@@ -314,6 +333,7 @@ class EmployeeViewModel : BaseViewModel<Navigator>() {
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
+
                 return
             }
             notify(1, builder)
