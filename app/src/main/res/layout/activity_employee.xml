@@ -78,6 +78,8 @@
             app:layout_constraintStart_toStartOf="@id/timer_bg"
             app:layout_constraintTop_toTopOf="@id/timer_bg" />
 
+
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/timer_"
             android:layout_width="wrap_content"
@@ -99,7 +101,7 @@
             android:layout_width="98dp"
             android:layout_height="90dp"
             android:adjustViewBounds="true"
-            android:background="@drawable/stop"
+            android:background="@drawable/stop_ic"
             android:onClick="@{()->vm.stop()}"
             app:layout_constraintBottom_toBottomOf="@id/timer_bg"
             app:layout_constraintEnd_toEndOf="@id/timer_bg"
@@ -111,8 +113,22 @@
             android:layout_width="98dp"
             android:layout_height="90dp"
             android:adjustViewBounds="true"
-            android:background="@drawable/pause"
+            android:background="@drawable/pause_ic"
             android:onClick="@{()->vm.pause()}"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/timer_bg"
+            app:layout_constraintEnd_toStartOf="@id/working_today"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/timer_bg" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/start_button"
+            android:layout_width="98dp"
+            android:layout_height="90dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/start_ic"
+            android:onClick="@{()->vm.startTimer()}"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/timer_bg"
             app:layout_constraintEnd_toStartOf="@id/working_today"
             app:layout_constraintStart_toStartOf="parent"
@@ -122,10 +138,10 @@
             android:id="@+id/week_bg"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_margin="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/double_margin"
+            android:layout_marginEnd="@dimen/full_margin"
             android:background="@drawable/circle_background"
-            android:backgroundTint="#CA9C82"
+            android:backgroundTint="#CA8282"
             app:layout_constraintEnd_toStartOf="@id/day_bg"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -176,8 +192,8 @@
             android:id="@+id/day_bg"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_margin="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/full_margin"
+            android:layout_marginTop="@dimen/double_margin"
             android:background="@drawable/circle_background"
             android:backgroundTint="#A482CA"
             app:layout_constraintEnd_toEndOf="parent"

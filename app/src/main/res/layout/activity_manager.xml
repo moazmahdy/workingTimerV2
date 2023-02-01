@@ -27,6 +27,17 @@
             android:textStyle="bold"
             android:layout_margin="40dp" />
 
+        <ImageView
+            android:id="@+id/logout_ic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="50dp"
+            android:background="@drawable/logout_ic"
+            android:onClick="@{()->vm.logout()}"
+            />
+
         <TextView
             android:id="@+id/manager_month_tv"
             android:layout_width="wrap_content"
@@ -34,6 +45,7 @@
             app:layout_constraintTop_toBottomOf="@id/manager_header_tv"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="January - 2023"
+            android:text="@={vm.thisMonth}"
             android:textColor="@color/white"
             android:textSize="19sp"
             android:layout_marginTop="8dp"
@@ -64,21 +76,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/manager_br"
-            app:layout_constraintBottom_toTopOf="@id/this_hour_tv"
+            app:layout_constraintBottom_toTopOf="@id/total_hour_tv"
             app:layout_constraintEnd_toEndOf="@id/manager_br"
             app:layout_constraintStart_toEndOf="@id/manager_total_salary_tv"
             android:text="Total Hours"
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/salary_image"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            app:layout_constraintTop_toTopOf="@id/total_salary_tv"
-            app:layout_constraintBottom_toBottomOf="@id/total_salary_tv"
-            app:layout_constraintEnd_toStartOf="@id/total_salary_tv"
-            android:src="@drawable/ic_money" />
 
         <TextView
             android:id="@+id/total_salary_tv"
@@ -90,7 +94,7 @@
             app:layout_constraintEnd_toStartOf="@id/manager_this_hour_tv"
             tools:text="Total Salaries"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <ImageView
@@ -99,11 +103,13 @@
             android:layout_height="15dp"
             app:layout_constraintTop_toTopOf="@id/total_salary_tv"
             app:layout_constraintBottom_toBottomOf="@id/total_salary_tv"
-            app:layout_constraintEnd_toStartOf="@id/this_hour_tv"
-            android:src="@drawable/time" />
+            app:layout_constraintEnd_toStartOf="@id/total_hour_tv"
+            android:src="@drawable/time"
+            android:layout_margin="5dp"
+            />
 
         <TextView
-            android:id="@+id/this_hour_tv"
+            android:id="@+id/total_hour_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/manager_this_hour_tv"
@@ -111,7 +117,7 @@
             app:layout_constraintEnd_toEndOf="@id/manager_br"
             app:layout_constraintStart_toEndOf="@id/manager_total_salary_tv"
             tools:text=" Total Hours"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/white" />
 
