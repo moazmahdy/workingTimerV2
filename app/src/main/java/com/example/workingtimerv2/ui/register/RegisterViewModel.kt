@@ -52,7 +52,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                     //sendEmailVerification()
                     // Create the user with email and password
                     createFirestoreUser(task.result.user!!.uid)
-                    //navigator?.openEmployeeScreen(name.get().toString())
+                    navigator?.openLoginScreen()
 //                    AppName.userName = name.toString()
                 }
             }
@@ -73,7 +73,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
     // Method to create the user in Firestore
     private fun createFirestoreUser(uid: String?) {
         //if (user != null && user.isEmailVerified)
-            if (user != null){
+        if (user != null){
             // Create the user object
             val user = AppUser(id = uid, name = name.get(), email = email.get())
             // Add the user to Firestore
@@ -82,7 +82,7 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
                 // Save the user object to a DataUtils class
                 DataUtils.user = user
                 // Navigate to the home screen
-                navigator?.openEmployeeScreen(user)
+                navigator?.openLoginScreen()
             }, {
                 // Hide loading spinner
                 showLoading.value = false

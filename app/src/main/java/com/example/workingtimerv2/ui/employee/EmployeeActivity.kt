@@ -34,11 +34,13 @@ class EmployeeActivity : BaseActivity<ActivityEmployeeBinding, EmployeeViewModel
 
         viewModel.startButton = viewDataBinding.startButton
         viewModel.pauseButton = viewDataBinding.pauseButton
+        viewModel.updateViews(user.yesterday!!, user.week!!, user.month!!)
+
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.updateViews()
+        viewModel.updateViews(user.yesterday!!, user.week!!, user.month!!)
     }
     override fun getLayoutId(): Int {
         return R.layout.activity_employee

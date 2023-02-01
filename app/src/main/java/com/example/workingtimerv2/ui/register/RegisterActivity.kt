@@ -36,8 +36,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
     }
 
     override fun openEmployeeScreen(user: AppUser) {
-        val intent = Intent(this, EmployeeActivity::class.java)
-        intent.putExtra("name", user)
-        startActivity(intent)
+
     }
 }
