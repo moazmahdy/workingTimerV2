@@ -13,7 +13,11 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
 
     val name = ObservableField<String>()
     val nameError = ObservableField<String>()
-    val email = ObservableField<String>()
+    val email = object: ObservableField<String>() {
+        override fun set(value: String?) {
+            super.set(value?.trim())
+        }
+    }
     val emailError = ObservableField<String>()
     val password = ObservableField<String>()
     val passwordError = ObservableField<String>()
@@ -45,12 +49,12 @@ class RegisterViewModel: BaseViewModel<Navigator>() {
 
     private fun createFirestoreUser(uid: String?) {
         showLoading.value = false
-        val user = AppUser(name = name.get(),
+        val user = AppUser(id = uid, name = name.get(),
             email = email.get())
         addUserToFirestore(user, {
             showLoading.value = false
             DataUtils.user = user
-            navigator?.openHomeScreen()
+            navigator?.openEmployeeScreen(user)
         }, {
             showLoading.value = false
             messageLiveData.value = it.localizedMessage

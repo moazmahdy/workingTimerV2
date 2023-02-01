@@ -41,23 +41,55 @@ buildToolsVersion '30.0.3'
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.firebase:firebase-common-ktx:20.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    def lifecycle_version = "2.2.0"
+    def nav_version = "2.1.0-alpha02"
+
+    implementation  "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+    // alternatively - just LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+
+    // optional - ReactiveStreams support for LiveData
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version"
+
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation platform('com.google.firebase:firebase-bom:31.1.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // alternatively - just ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    implementation "androidx.core:core-ktx:1.9.0"
+    implementation "androidx.appcompat:appcompat:1.6.0"
+    implementation "androidx.fragment:fragment:1.6.0-alpha04"
+    implementation "androidx.fragment:fragment-ktx:1.6.0-alpha04"
+
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+
+    implementation "com.google.firebase:firebase-core:21.1.1"
+    implementation "com.google.firebase:firebase-database:20.1.0"
+    implementation "com.google.firebase:firebase-firestore:24.4.2"
+    implementation "com.google.firebase:firebase-auth:21.1.0"
+    implementation "com.google.firebase:firebase-storage:20.1.0"
+    implementation "com.google.firebase:firebase-messaging:23.1.1"
     implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
 
-    var lifecycle_version = "2.5.1"
 
-    // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    //calender
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
+
 }

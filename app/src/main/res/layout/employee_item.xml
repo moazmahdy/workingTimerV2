@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.example.workingtimerv2.model.AppUser" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_margin="12dp">
+
+        <View
+            android:id="@+id/item_br"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rectangle_background"
+            android:backgroundTint="#FFBB93" />
+
+        <TextView
+            android:id="@+id/item_employee_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/item_br"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Moaz Mahdy"
+            android:text="@{item.name}"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_margin="12dp" />
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_employee_name"
+            android:src="@drawable/itemtime"
+            android:layout_margin="12dp" />
+
+        <TextView
+            android:id="@+id/item_hours_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/item_employee_name"
+            app:layout_constraintStart_toEndOf="@id/item_image"
+            tools:text="120h"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="10dp" />
+
+        <TextView
+            android:id="@+id/item_salary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="1200$"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="24dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
