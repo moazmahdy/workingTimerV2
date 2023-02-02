@@ -6,5 +6,5 @@ object Constants {
 
     const val SALARY_BER_HOUR = 100
 
-    const val MANAGER_ID= "wxnWB4aQCdXHYMHp1Wtvp9fOi9J2"
+    const val MANAGER_ID= "tuIJKFWvYHZOkMz1eO4CxlVLws23"
 }
